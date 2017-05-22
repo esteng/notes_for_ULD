@@ -1,6 +1,6 @@
-#VB Code
+# VB Code
 
-##VB-DPHMM
+## VB-DPHMM
 ### code
 - repo : `https://github.com/iondel/amdtk`
 - VB training done in script `amdtk/recipes/timit/utils/phone_loop_train.sh`
