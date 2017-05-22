@@ -1,5 +1,5 @@
-#2007
-##Intro
+# 2007
+## Intro
 - idea of paired assumptions
 	- assuming things about structure of language
 	- assuming things about probability of generating those structures
