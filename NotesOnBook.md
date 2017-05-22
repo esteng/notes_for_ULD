@@ -1,16 +1,16 @@
-#Notes on Productivity and Reuse
+# Notes on Productivity and Reuse
 
-##main problem:
+## main problem:
 - tradeoff between productivity and reuse
 - what part do you store, what part to you compute each time
 - if you want to store high frequency items, how do you infer a priori what will be high frequency and what is not 
 
 
-##Chapt. 1
-###models
+## Chapt. 1
+### models
 - for these purposes, models are programs that generate observable data
 
-###three approaches
+### three approaches
 - modularity: computation and storage at different levels of grammer (i.e. compute syntax, store phonology) 
 - ideosyncrasy: identifies computation with regularity and storage with idiosyncracy (i.e. compute regular rule-based productions, store unique exceptions)
 - modularity works on assumption that there are fewer morphemes than words, fewer words than sentences, etc. 
@@ -22,7 +22,7 @@
 - **final approach: Learning Synergies**
 	- different sorts of evidence make "similar, redundant predictions about the productivity of word-formation processes"
 
-##the proposal
+## the proposal
 ### 4 assumptions made
 - producing new forms is based on system of recursive rules
 - frequent sequences can be stored and reused as one unit
@@ -45,14 +45,15 @@
 	- unlike first three, productivity and reuse determined by using inference 
 		- for each data point, decide if it would be better to store it or to compute it later, or a little of both
 
-##Chapt 2 
-###what is inference
+## Chapt 2 
+ 
+### what is inference
 - inference is guessing hidden structure/generalizing from noisy/partial/unclear data
 - represent data/hypotheses as random variables, use probabilistic conditioning
 - usually have many random variables we're interested in
 	- r.v.'s over "words, morphemes, parses, rules, and grammars"
 
-##what is conditioning
+## what is conditioning
 - formula is Baye's rule
 - 2 step procedure with two inputs
 	- input 1: joint distribution
@@ -61,19 +62,19 @@
 	- procedure checks every comb. of values and discards if the conditioner doesn't hold (i.e. $P(D=d,l=l) = 0  \Rightarrow P(L=l | D = d) = \frac{P(D=d, L=l)}{\sum\limits_{\forall l' \in L}^{} P(D = d, L = l')} = 0$
 	- after discarding inconsistent ones, procedure takes probability mass of rejected outcomes and redistributes over remaining possibilities proportionally (this is denominator $\sum\limits_{\forall l' \in L}^{} P(D = d, L = l')$ 
 
-##rationality
+## rationality
 - we are assuming that cognitive systems exist to help find optimal solutions
 	- not always evolutionarily true, but allows us to look for optimal solution
 - we can do rational analysis: specify goals of system, formalize computational space to reach the goals, derive optimal behavior of system trying to reach goals
 
-##Stochastic memoization
+## Stochastic memoization
 - problem: if we memoized even in PPL, we will end up with determinate output after one iteration
 - we need stochastic memoization
 	- associates input with distribution over output values 
 	- probability that each previously computed value will be reused in next call
 	- try to infer: which computations likely to have been stored and reused in generated data
 
-###Pitman-Yor Process
+### Pitman-Yor Process
 - to do this we need PYP
 - non-parametric (can change given new evidence)
 - restaurant with infinite number of tables, 1st customer sits at first table, every customer after that sits at table $i$ with probability $\frac{y_i - a}{N + b}$ where $N$ is number of customers, $y_i$ is number of people at table $i$, and $a,b$ are discount and concentration parameters, and sits and a new table with probability $\frac{Ka + b}{N + b}$ where $K$ is total number of occupied tables
@@ -94,7 +95,7 @@
 	- goes up the more tables are occupied
 	- so probability of generating novel form goes up the more novel words you've seen
 	
-###lazy evaluation
+### lazy evaluation
 - could either eval things as they are called
 - or could wait until argument value needed before computing it
 	- this can allow memoization if arg value has already been computed before, avoids unnecessary computations
@@ -107,7 +108,7 @@
 	- randomly pick whether to unpack RHS symbol or to delay sampling till later
 - now we need a way of storying partial computations
 
-####Fragment Grammars
+#### Fragment Grammars
 - model results of stochasitcally memoizing unfold procedure
 - unfolding fragment grammar involves either
 	- returning previously sampled memoized partial computation  
@@ -115,22 +116,22 @@
 - promise computations are ultimately forced, no incomplete expressions
 - since grammar is recursive, computation may be memoized, saving computations
 
-####Fragment $\lambda$
+#### Fragment $\lambda$
 - can be used to define procedures
 - its procedules automatically reuse partial subcomputations (stochastically)
 	- if the arguments of the function are delayed, then delay the body
 	- otherwise execute the body
 - can be used for many types of models 
 	
-###overview of models thus far
-####Dirichlet-Multinomial PCFG (DMPCFG)
+### overview of models thus far
+#### Dirichlet-Multinomial PCFG (DMPCFG)
 - full parsing (only smallest units stored, no larger trees/subtrees reused)
 - rule probabilities come from a Dirichlet prior dist. 
 - posterior distribution comes from data, we can then calculate conditional
 - DMPCFG weights are related to frequency in training data
 	- high posterior rules usually proportional to frequency in data
 
-####Maximum A Posteriori Adaptor Grammar (MAG)
+#### Maximum A Posteriori Adaptor Grammar (MAG)
 - full listing (everything stored in entirety)
 - use grammar with max score under posterior dist. of training data
 - stores all computations, but only reuses them probabilistically
@@ -144,7 +145,7 @@
 - but not always the case, so MAG limited
 	- can't learn a productive combination of morphemes like -ability
 
-####Data Oriented Parsing (DOP)
+#### Data Oriented Parsing (DOP)
 - exemplar based
 - store **all** subtrees
 - all possible generalizations in data are stored 
@@ -162,7 +163,7 @@
 	- some penalize larger trees or long derivations
 - ENDOP and DOP1 store all subtrees
 
-####Fragment Grammars (FG)
+#### Fragment Grammars (FG)
 - inference-based
 - tries to find balance between storage and productivity to best predict training data
 - inherits from MAG, can store any sub-computation
@@ -181,8 +182,8 @@
 	- same with particular sub-forms
 
 	
-##Chapt 3: math details
-###CFGs
+## Chapt 3: math details
+### CFGs
 - what is CFG
 	- Context-Free Grammar
 	- 4-tuple: $G = \<V_G, T_G, R_G, W  \>$ 
@@ -201,7 +202,7 @@
 	- language of whole CFG G is $L_W$ 
 - no policy for how to choose rules
 
-###Multinomial Context Free Grammars
+### Multinomial Context Free Grammars
 - multinomial dist. is easiest way to specify dist. over finite number of discrete choices
 	- if you have $K$ possible choices, specify a vector with length $K$ $\Theta$ such that $\Theta_i \geq 0$ and $\sum\limits_{\forall i} \Theta_i = 1$
 	- probability of rules given by multinomial distribution
@@ -233,7 +234,7 @@
 	- counts(D) = X 
 - then the probability of a corpus of derivations given by product of probabilities of all the rules used in the corpus
 
-###Dirichlet-multinomial distribution
+### Dirichlet-multinomial distribution
 - Polya-urn representation
 - places Dirichlet prior on vector $\Theta$ of probabilities, parametrizing multinomial distribution over $K$ elements 
 - 2 step sampling process
@@ -252,7 +253,7 @@
 - probability of a certain partition:
 	- $P(x | \pi ) = \frac{\prod_{i=1}^K \Gamma(\pi_i + x_i) \Gamma(\sum_{i=1}^K \pi_i)}{\Gamma(\sum_{i=1}^k \pi_i + x_i) \prod_{}^ \Gamma(\pi_i)}$
 	- same as integrating out $\Theta$ from product of multinomial likelihood with Dirichlet prior
-###application to PCFG
+### application to PCFG
 - normal multinomial PCFG has $\Theta$ pre-specified 
 - but $\Theta$ could be drawn from Dirichlet prior
 	- this is DMPCFG
@@ -260,7 +261,7 @@
 - DMPCFG is a full parsing approach
 - uses Polya-urn process for each nonterminal in CFG
 	- each nonterminal gets a vector of pseudocounts 
-###DOP
+### DOP
 - tree substitution grammar 
 	- generalization of CFG
 	- basic units can be arbitrary tree fragments, rather than rules
@@ -271,7 +272,7 @@
 - equation for probability of derviation is essentially same as recursive stochastic eqn for PCFGS except that prefixes are used instead of rules
 - **come back to this **
 
-###Pitman-Yor
+### Pitman-Yor
 - reduces to single-parameter Chinese restaurant process when a=0. 
 - on average, $a$ is limiting proportion of tables in the restaurant with only one customer, and limiting probability of sitting at a new table
 - $b$ controls the rate of growth of new tables in relation to total number of customers
@@ -286,7 +287,7 @@
 	- unlike $\Theta ~ DIRICHLET(\pi)$ $mem{G}$ is countably infinite 
 	- so we have to do lazy enumeration
 
-###Adaptor Grammars
+### Adaptor Grammars
 - can be understood as PYP-memoization of PCFG unfold procedure
 - MAGs (Max a posteriori Adaptor Grammars) adds Dirichlet priors to rule weights in CFG system 
 - always returns fully expanded tree
@@ -294,7 +295,7 @@
 - also exchangeable
 - probability of particular set of alayses given in terms of counts associated with individual Dirichlet-multinom. and PY dists. 
 
-###Fragment Grammars
+### Fragment Grammars
 - can store partial derivations in PYP memoizer
 	- lazy evaluation   
 - decision to recurse or halt at each non-terminal not made by fair coin flip
@@ -304,13 +305,13 @@
 	- beta dist. is analog of Dirichlet with only 2 outcomes
 - fragment grammar made of CFG, $\{\pi^A\}A\in V_g $ which are vectors of Dirichlet-multinomial pseudocounts for each nonterminal, set of PY hyperparameters for each noterminal, and set of pseudo-counts for the beta-binomial distribution associated with RHS of each production rule in CFG
 
-####FG inference
+#### FG inference
 - trying to answer: what is dist. over sets of stored tree fragments that best explains observed data
 - given gramman F_1 and correct parse trees D, try to find dist. over set of fragment grammar analyses for parses which specifies ways parses can be split up into tree fragments
 - find $P(F|D, F_1) = P(D|F_1, F) P(F|F_1)$
 
-###Metropolis-Hastings sampler
-####MCMC
+### Metropolis-Hastings sampler
+#### MCMC
 - Markov chain Monte-Carlo
 - approximate inference technique 
 - samples from hypothesis space by defining Markov chain of local steps
@@ -327,7 +328,7 @@
 	- either accepted or rejected by Metropolis-Hastings criterion 
 	- add either $f^{(i)}$ or $f^{(i)}'$ depending on if proposal was accepted or rejected to state of system and procedure is repeated for next one
 
-###PCFG approximation
+### PCFG approximation
 - PCFG has strong conditional independence assumption
 	- means that you can have efficient algorithm to solve PCFG parsing problems
 	- rely on fact that distributions over parses for a string generated by PCFG decomposes into product over independent sums of substring parses
@@ -341,7 +342,7 @@
 - with approximating grammar, we can efficiently compute dist. over derivations of an expression  
 - see book for 3 steps on how to compute proposal for Metropolis-Hastings sampler 
 
-###speeding everything up
+### speeding everything up
 - can use batch initialization for MAP fragment grammar
 	- every node in input corpus assigned in parallel to own table in restaurant
 	- all decisions about dist. of other r.v.'s randomly sampled from prior
@@ -358,10 +359,6 @@
 	- main cause is large size of approximating PCFGs
  	- so adapt Metropolis-Hastings to be faster
 
- 
- 
-##Questions:
-- what exactly are you sampling  
 
 	
 	
